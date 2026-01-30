@@ -21,7 +21,7 @@ def process_article(title, description, url):
     if not init_vertex_ai():
         return None, None
 
-    model = GenerativeModel("gemini-1.5-flash")
+    model = GenerativeModel("gemini-2.5-flash")
 
     prompt = f"""
     You are a professional news translator and editor.

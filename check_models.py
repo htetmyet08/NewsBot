@@ -22,11 +22,9 @@ def check_model_access():
         # so we will try a few known persistent names.
         
         known_models = [
-            "gemini-1.5-flash",
-            "gemini-1.5-flash-001",
-            "gemini-1.5-flash-002",
-            "gemini-1.5-pro",
-            "gemini-1.0-pro"
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
+            "gemini-2.0-flash"
         ]
         
         for name in known_models:
