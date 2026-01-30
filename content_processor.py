@@ -1,21 +1,19 @@
-import google.generativeai as genai
+from google import genai
 import config
 
-def configure_gemini():
+def get_gemini_client():
     if not config.GEMINI_API_KEY:
         print("Error: GEMINI_API_KEY is not set.")
-        return False
-    genai.configure(api_key=config.GEMINI_API_KEY)
-    return True
+        return None
+    return genai.Client(api_key=config.GEMINI_API_KEY)
 
 def process_article(title, description, url):
     """
     Rewrites the news title and description into Myanmar language using Gemini.
     """
-    if not configure_gemini():
+    client = get_gemini_client()
+    if not client:
         return None, None
-
-    model = genai.GenerativeModel('gemini-1.5-flash')
 
     prompt = f"""
     You are a professional news translator and editor.
@@ -31,7 +29,10 @@ def process_article(title, description, url):
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
         text = response.text
         
         # Simple parsing logic (assuming Gemini follows the format)
