@@ -15,13 +15,32 @@ def check_model_access():
     try:
         vertexai.init(project=config.GCP_PROJECT_ID, location=config.GCP_LOCATION)
         
-        model_name = "gemini-1.5-flash-001"
-        print(f"Attempting to load model: {model_name}")
+        # List available models to debug 404 errors
+        print("\nListing available Gemini models in this project/location:")
+        from vertexai.preview.generative_models import GenerativeModel
+        # Note: Listing models programmatically in Vertex AI can be tricky, 
+        # so we will try a few known persistent names.
         
-        model = GenerativeModel(model_name)
+        known_models = [
+            "gemini-1.5-flash",
+            "gemini-1.5-flash-001",
+            "gemini-1.5-flash-002",
+            "gemini-1.5-pro",
+            "gemini-1.0-pro"
+        ]
         
-        # Quick generation test to verify access
-        response = model.generate_content("Hello")
+        for name in known_models:
+            print(f"Checking {name}...", end=" ")
+            try:
+                m = GenerativeModel(name)
+                # Just checking object creation isn't enough, usually need a call, 
+                # but let's try to generate 'hi'
+                r = m.generate_content("hi")
+                print("OK! ✅")
+            except Exception as ex:
+                print(f"Failed ({ex}) ❌")
+
+        model_name = "gemini-1.5-flash"
         
         if response and response.text:
             print(f"SUCCESS: Model '{model_name}' is accessible and working.")
