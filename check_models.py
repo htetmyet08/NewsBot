@@ -40,21 +40,14 @@ def check_model_access():
             except Exception as ex:
                 print(f"Failed ({ex}) ❌")
 
-        model_name = "gemini-1.5-flash"
-        
-        if response and response.text:
-            print(f"SUCCESS: Model '{model_name}' is accessible and working.")
-            print(f"Response snippet: {response.text.strip()}")
-        else:
-            print("WARNING: Model loaded but no response text received.")
-
     except Exception as e:
         print(f"FAILED: Could not access Vertex AI model.")
         print(f"Error details: {e}")
         print("\nTroubleshooting:")
-        print("1. Check if 'Vertex AI API' is enabled in Google Cloud Console.")
-        print("2. Check if your Service Account has 'Vertex AI User' role.")
-        print("3. Check if GOOGLE_APPLICATION_CREDENTIALS path is correct.")
+        print("1. Go to Google Cloud Console > Vertex AI > Model Garden.")
+        print("2. Search for 'Gemini' and click 'View Details' / 'Enable'.")
+        print("3. Check if 'Vertex AI API' is enabled.")
+        print("4. Try changing GCP_LOCATION in .env to 'us-west1' or 'us-west4'.")
 
 if __name__ == "__main__":
     check_model_access()
