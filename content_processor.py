@@ -1,17 +1,17 @@
-from google import genai
+from groq import Groq
 import config
 
-def get_gemini_client():
-    if not config.GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY is not set.")
+def get_groq_client():
+    if not config.GROQ_API_KEY:
+        print("Error: GROQ_API_KEY is not set.")
         return None
-    return genai.Client(api_key=config.GEMINI_API_KEY)
+    return Groq(api_key=config.GROQ_API_KEY)
 
 def process_article(title, description, url):
     """
-    Rewrites the news title and description into Myanmar language using Gemini.
+    Rewrites the news title and description into Myanmar language using Groq.
     """
-    client = get_gemini_client()
+    client = get_groq_client()
     if not client:
         return None, None
 
@@ -29,13 +29,18 @@ def process_article(title, description, url):
     """
 
     try:
-        response = client.models.generate_content(
-            model='gemini-1.5-flash-001',
-            contents=prompt
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="llama-3.3-70b-versatile",
         )
-        text = response.text
+        text = chat_completion.choices[0].message.content
         
-        # Simple parsing logic (assuming Gemini follows the format)
+        # Simple parsing logic
         lines = text.strip().split('\n')
         my_title = ""
         my_summary = ""
@@ -53,13 +58,6 @@ def process_article(title, description, url):
         return my_title, my_summary
 
     except Exception as e:
-        print(f"Error processing content with Gemini: {e}")
-        if "404" in str(e):
-            try:
-                print("DEBUG: Listing available models for your key:")
-                for m in client.models.list():
-                    if "generateContent" in m.supported_generation_methods:
-                         print(f" - {m.name}")
-            except Exception as list_e:
-                print(f"DEBUG: Could not list models: {list_e}")
+        print(f"Error processing content with Groq: {e}")
         return None, None
+
