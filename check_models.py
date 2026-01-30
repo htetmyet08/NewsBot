@@ -1,22 +1,20 @@
-from google import genai
+from groq import Groq
 import config
 
 def list_models():
-    if not config.GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY is not set.")
+    if not config.GROQ_API_KEY:
+        print("Error: GROQ_API_KEY is not set.")
         return
 
-    client = genai.Client(api_key=config.GEMINI_API_KEY)
+    client = Groq(api_key=config.GROQ_API_KEY)
     
     try:
-        print("Fetching available models...")
-        # The new SDK might use a different way to list models, checking commonly used method
-        # If client.models.list() exists:
-        files = client.models.list()
-        for m in files:
-            print(f"Model: {m.name}")
-            print(f"  DisplayName: {m.display_name}")
-            print(f"  Supported: {m.supported_generation_methods}")
+        print("Fetching available Groq models...")
+        models = client.models.list()
+        # The Groq API returns a list of models slightly differently, usually in data
+        for m in models.data:
+            print(f"Model: {m.id}")
+            print(f"  Owner: {m.owned_by}")
             print("-" * 20)
             
     except Exception as e:
