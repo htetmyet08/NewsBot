@@ -54,4 +54,12 @@ def process_article(title, description, url):
 
     except Exception as e:
         print(f"Error processing content with Gemini: {e}")
+        if "404" in str(e):
+            try:
+                print("DEBUG: Listing available models for your key:")
+                for m in client.models.list():
+                    if "generateContent" in m.supported_generation_methods:
+                         print(f" - {m.name}")
+            except Exception as list_e:
+                print(f"DEBUG: Could not list models: {list_e}")
         return None, None
