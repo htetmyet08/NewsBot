@@ -36,7 +36,7 @@ def process_article(title, description, url):
                     "content": prompt,
                 }
             ],
-            model="llama-3.1-70b-versatile",
+            model="llama-3.1-8b-instant",
         )
         text = chat_completion.choices[0].message.content
         
